@@ -1,0 +1,399 @@
+================================================================================
+       SQL COURSE: MILESTONE CASE STUDIES SOLUTION MANUAL & ANSWER KEY
+          (৫টি সমন্বিত মাইলস্টোন ও ২০টি কেস-স্টাডির পূর্ণাঙ্গ সমাধান)
+================================================================================
+
+মাইলস্টোন 1: একক টেবিল কুয়েরিং, ফিল্টারিং ও ডেটা রূপান্তর (মডিউল ০১ – ০৫)
+মূল ফোকাস: SELECT, WHERE, LIKE, BETWEEN, ORDER BY, LIMIT, DDL, DML
+================================================================================
+
+[M1.1] রিজিওনাল কাস্টমার টার্গেটিং ও সর্টিং
+প্রেক্ষাপট: মার্কেটিং টিম বরিশাল বিভাগের নির্দিষ্ট অঞ্চলের সক্রিয় গ্রাহকদের জন্য একটি বিশেষ প্রোমোশনাল ক্যাম্পেইন শুরু করতে চায়।
+টাস্ক:
+customers টেবিল থেকে এমন সক্রিয় গ্রাহকদের তালিকা ফিল্টার করুন যাদের জেলা 'Barishal' অথবা 'Bhola' এবং নামের শুরুতে 'MD.' রয়েছে। ফলাফলটি নামের বর্ণানুক্রমিক ক্রমানুসারে (A to Z) সাজিয়ে প্রথম ৩ জন গ্রাহকের আইডি, পুরো নাম এবং জেলা প্রদর্শন করুন।
+
+SQL সমাধান:
+SELECT customer_id, full_name, city
+FROM customers
+WHERE status = 'Active'
+  AND city IN ('Barishal', 'Bhola')
+  AND full_name LIKE 'MD.%'
+ORDER BY full_name ASC
+LIMIT 3;
+
+--------------------------------------------------------------------------------
+
+[M1.2] ডিসকাউন্ট ক্যাটালগ ও স্টক ভ্যালুয়েশন
+প্রেক্ষাপট: ইনভেন্টরি ম্যানেজার মাঝারি স্টকের দামি পণ্যগুলোর ওপর ১০% বিশেষ ছাড় দিয়ে একটি ক্যাটালগ রিপোর্ট তৈরি করতে চান।
+টাস্ক:
+products টেবিল থেকে যেসব পণ্যের মজুদ (stock_qty) ২০ থেকে ৬০-এর মধ্যে এবং নিয়মিত মূল্য ৫০০ টাকার বেশি, সেগুলোর নাম ও নিয়মিত মূল্য দেখান। একই সাথে মূল্যের ওপর ১০% ছাড় দিয়ে 'discounted_price' নামে একটি নতুন হিসাবকৃত কলাম তৈরি করুন এবং সর্বোচ্চ ছাড়প্রাপ্ত মূল্য অনুসারে বড় থেকে ছোট ক্রমে সাজান।
+
+SQL সমাধান:
+SELECT product_name,
+  unit_price AS regular_price,
+  ROUND(unit_price * 0.90) AS discounted_price
+FROM products
+WHERE stock_qty BETWEEN 20 AND 60
+  AND unit_price > 500
+ORDER BY discounted_price DESC;
+
+--------------------------------------------------------------------------------
+
+[M1.3] ফ্ল্যাশ ডিল টেবিল তৈরি ও শর্তযুক্ত মূল্য আপডেট
+প্রেক্ষাপট: উৎসব উপলক্ষে একটি নতুন অস্থায়ী অফার টেবিল তৈরি করে নির্দিষ্ট পণ্যের দাম কমাতে হবে।
+টাস্ক:
+১. flash_deals নামে একটি নতুন টেবিল তৈরি করুন যার কলাম হবে: deal_id (Primary Key), product_id (Not Null), deal_price (Int), এবং expiry_date (Text)।
+২. এই টেবিলে একসাথে ২টি পণ্যের প্রাথমিক অফার ডেটা যুক্ত করার কুয়েরি লিখুন।
+৩. এরপর একটি নিরাপদ UPDATE কুয়েরি লিখুন যাতে যেসব পণ্যের অফার মূল্য ১,০০০ টাকার বেশি, সেগুলোর দাম আরও ১০০ টাকা কমিয়ে দেওয়া হয়।
+
+SQL সমাধান:
+-- ১. টেবিল তৈরি
+CREATE TABLE flash_deals (
+  deal_id INT PRIMARY KEY,
+  product_id INT NOT NULL,
+  deal_price INT NOT NULL,
+  expiry_date TEXT NOT NULL
+);
+
+-- ২. ব্যাচ ইনসার্ট
+INSERT INTO flash_deals VALUES 
+  (1, 101, 750, '2026-04-01'),
+  (2, 102, 2100, '2026-04-01');
+
+-- ৩. নিরাপদ আপডেট
+UPDATE flash_deals
+SET deal_price = deal_price - 100
+WHERE deal_price > 1000;
+
+--------------------------------------------------------------------------------
+
+[M1.4] ডেটা অডিট ও অপূর্ণাঙ্গ রেকর্ড ছাঁটাই
+প্রেক্ষাপট: কমপ্লায়েন্স টিম ডেটাবেসের ত্রুটিপূর্ণ ও নিষ্ক্রিয় গ্রাহকদের চিহ্নিত ও পরিষ্কার করতে চায়।
+টাস্ক:
+১. customers টেবিল থেকে এমন গ্রাহকদের খুঁজুন যারা হয় নিষ্ক্রিয় (status = 'Inactive') অথবা যাদের কোনো ফোন নম্বর এন্ট্রি করা নেই (phone IS NULL), তবে তারা যেন 'Patuakhali' বা 'Barguna' জেলার বাসিন্দা না হন।
+২. অডিট যাচাই শেষে ব্যবস্থাপনা কর্তৃপক্ষ যদি এই নির্দিষ্ট অপূর্ণাঙ্গ রেকর্ডগুলো মুছে ফেলার সিদ্ধান্ত নেয়, তবে অন্য কোনো গ্রাহকের ক্ষতি না করে একটি নিরাপদ DELETE কুয়েরি লিখুন।
+
+SQL সমাধান:
+-- ১. অডিট কুয়েরি
+SELECT customer_id, full_name, city, status, phone
+FROM customers
+WHERE (status = 'Inactive' OR phone IS NULL)
+  AND city NOT IN ('Patuakhali', 'Barguna')
+ORDER BY customer_id ASC;
+
+-- ২. নিরাপদ ডিলিট
+DELETE FROM customers
+WHERE (status = 'Inactive' OR phone IS NULL)
+  AND city NOT IN ('Patuakhali', 'Barguna');
+
+--------------------------------------------------------------------------------
+
+
+মাইলস্টোন 2: গ্রুপিং, শর্তসাপেক্ষ লজিক ও ডেটা টায়ারিং (মডিউল ০৬ – ০৮)
+মূল ফোকাস: GROUP BY, HAVING, CASE, COALESCE, NULLIF, CAST
+================================================================================
+
+[M2.1] জেলা ভিত্তিক বিক্রয় আয় ও অর্ডার ভলিউম অ্যানালাইসিস
+প্রেক্ষাপট: মার্কেট অ্যানালিস্ট টিম প্রতিটি জেলার মোট বাণিজ্যিক বিক্রির চিত্র দেখতে চায়।
+টাস্ক:
+customers ও orders টেবিল মিলিয়ে প্রতিটি জেলার নাম, মোট অর্ডারের সংখ্যা এবং মোট বিক্রির পরিমাণ বের করুন। শুধুমাত্র যেসব জেলায় মোট বিক্রয় ৩,০০০ টাকার বেশি, সেগুলোকে মোট বিক্রির ভিত্তিতে বড় থেকে ছোট ক্রমে সাজিয়ে প্রদর্শন করুন।
+
+SQL সমাধান:
+SELECT c.city,
+  COUNT(o.order_id) AS total_orders,
+  SUM(o.total_amount) AS total_sales
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY c.city
+HAVING SUM(o.total_amount) > 3000
+ORDER BY total_sales DESC;
+
+--------------------------------------------------------------------------------
+
+[M2.2] গ্রাহক ব্যয়ের ভিত্তিতে ভিআইপি ও স্ট্যান্ডার্ড শ্রেণিবিন্যাস
+প্রেক্ষাপট: মার্কেটিং টিম গ্রাহকদের ব্যয়ের পরিমাণের ওপর ভিত্তি করে লয়্যালটি ব্যাজ প্রদান করতে চায়।
+টাস্ক:
+orders টেবিল থেকে প্রতিটি গ্রাহক আইডি এবং তাদের মোট ব্যয়ের পরিমাণ নির্ণয় করুন। এরপর CASE ব্যবহার করে একটি নতুন কলাম 'tier' তৈরি করুন: মোট ব্যয় ৪,০০০ বা তার বেশি হলে 'Platinum', ২,০০০ থেকে ৩,৯৯৯ হলে 'Gold', অন্যথায় 'Silver'। ফলাফলটি মোট ব্যয়ের অধোগামী ক্রমে সাজান।
+
+SQL সমাধান:
+SELECT customer_id,
+  SUM(total_amount) AS total_spent,
+  CASE 
+    WHEN SUM(total_amount) >= 4000 THEN 'Platinum'
+    WHEN SUM(total_amount) >= 2000 THEN 'Gold'
+    ELSE 'Silver'
+  END AS tier
+FROM orders
+GROUP BY customer_id
+ORDER BY total_spent DESC;
+
+--------------------------------------------------------------------------------
+
+[M2.3] অফিসিয়াল কাস্টমার ডিরেক্টরি ও নাল ডেটা হ্যান্ডলিং
+প্রেক্ষাপট: সাপোর্ট টিমের জন্য একটি সার্বিক যোগাযোগ তালিকা দরকার যেখানে কোনো ফাঁকা ঘর যেন অস্বস্তিকর না দেখায়।
+টাস্ক:
+customers টেবিল থেকে প্রতিটি গ্রাহকের পুরো নাম, জেলা এবং ফোন নম্বর প্রদর্শন করুন। যদি কোনো গ্রাহকের ফোন নম্বর না থাকে (NULL), তবে সেখানে 'Contact Missing' দেখান। একই সাথে CASE ব্যবহার করে গ্রাহক সক্রিয় থাকলে 'Active Member' এবং নিষ্ক্রিয় থাকলে 'Deactivated' প্রদর্শন করুন।
+
+SQL সমাধান:
+SELECT full_name, city,
+  COALESCE(phone, 'Contact Missing') AS phone_status,
+  CASE 
+    WHEN status = 'Active' THEN 'Active Member'
+    ELSE 'Deactivated'
+  END AS account_label
+FROM customers
+ORDER BY city, full_name;
+
+--------------------------------------------------------------------------------
+
+[M2.4] নিরাপদ ইউনিট ইকোনমিক্স ও শূন্য দ্বারা ভাগ প্রতিরোধ
+প্রেক্ষাপট: ফাইন্যান্স টিম প্রতিটি অর্ডারের গড় আইটেম মূল্য হিসাব করতে চায় কিন্তু শূন্য আইটেমের কারণে কুয়েরি ফেইল ঠেকাতে হবে।
+টাস্ক:
+একটি অর্ডারে মোট টাকা (total_amount) এবং মোট আইটেম সংখ্যা (item_count) দেওয়া থাকলে, প্রতি আইটেমের গড় মূল্য (average_item_cost) হিসাব করার এমন একটি কুয়েরি লিখুন যাতে item_count শূন্য হলেও division by zero ত্রুটি না ঘটে এবং দশমিক মান অক্ষত থাকে।
+
+SQL সমাধান:
+SELECT order_id, total_amount, item_count,
+  ROUND(total_amount * 1.0 / NULLIF(item_count, 0), 2) AS average_item_cost
+FROM orders;
+
+--------------------------------------------------------------------------------
+
+
+মাইলস্টোন 3: রিলেশনাল জয়েন, চার্ন অ্যানালাইসিস ও সেট অপারেশন (মডিউল ০৯ – ১২)
+মূল ফোকাস: INNER JOIN, LEFT JOIN, Anti Join, SELF JOIN, UNION, INTERSECT, EXCEPT
+================================================================================
+
+[M3.1] ৩টি টেবিল মিলিয়ে পূর্ণাঙ্গ সেলস ইনভয়েস লাইন তৈরি
+প্রেক্ষাপট: অ্যাকাউন্টিং টিম প্রতিটি অর্ডারে কোন গ্রাহক কোন পণ্য কত পিস কিনেছেন তার পূর্ণাঙ্গ হিসাব দেখতে চায়।
+টাস্ক:
+customers, orders এবং order_items টেবিল জয়েন করে গ্রাহকের নাম, জেলা, অর্ডার আইডি, পণ্যের আইডি, পরিমাণ (quantity), একক মূল্য (unit_price) এবং মোট লাইন প্রাইস (quantity * unit_price) প্রদর্শনের কুয়েরি লিখুন। ফলাফলটি অর্ডার আইডি অনুসারে সাজান।
+
+SQL সমাধান:
+SELECT 
+  c.full_name, c.city, o.order_id,
+  oi.product_id, oi.quantity, oi.unit_price,
+  (oi.quantity * oi.unit_price) AS line_total
+FROM customers c
+INNER JOIN orders o ON c.customer_id = o.customer_id
+INNER JOIN order_items oi ON o.order_id = oi.order_id
+ORDER BY o.order_id;
+
+--------------------------------------------------------------------------------
+
+[M3.2] অর্ডারহীন গ্রাহক শনাক্তকরণ ও চার্ন অ্যানালাইসিস
+প্রেক্ষাপট: মার্কেটিং টিম এমন নিবন্ধিত গ্রাহকদের খুঁজতে চায় যারা কখনোই কোনো পণ্য কেনেননি, যেন তাদের ৫০% ডিসকাউন্ট ভাউচার পাঠানো যায়।
+টাস্ক:
+customers এবং orders টেবিলের মধ্যে Anti Join ব্যবহার করে এমন সব গ্রাহকের কাস্টমার আইডি, নাম এবং জেলা খুঁজে বের করুন যাদের কোনো অর্ডার হিস্ট্রি নেই। একই সাথে দেখান কেন এই কাজে INNER JOIN অকার্যকর।
+
+SQL সমাধান:
+SELECT c.customer_id, c.full_name, c.city
+FROM customers c
+LEFT JOIN orders o ON c.customer_id = o.customer_id
+WHERE o.order_id IS NULL
+ORDER BY c.customer_id;
+
+--------------------------------------------------------------------------------
+
+[M3.3] প্রাতিষ্ঠানিক অর্গানোগ্রাম ও শীর্ষ নির্বাহীর লিডারশিপ রিপোর্ট
+প্রেক্ষাপট: এইচআর টিম প্রতিষ্ঠানের কর্মকর্তা ও তাঁদের সুপারভাইজারদের একটি সম্পূর্ণ তালিকা দেখতে চায়।
+টাস্ক:
+employees টেবিলকে নিজের সাথেই SELF JOIN করে কর্মকর্তা ও তাঁর ঊর্ধ্বতনের নাম বের করুন। প্রতিষ্ঠানের প্রধান নির্বাহীর কোনো ম্যানেজার নেই (NULL); তাকেও 'Top Executive' হিসেবে অক্ষত রেখে সম্পূর্ণ চার্ট প্রদর্শনের উপযুক্ত কুয়েরি লিখুন।
+
+SQL সমাধান:
+SELECT 
+  e.full_name AS employee_name,
+  COALESCE(m.full_name, 'Top Executive') AS reports_to
+FROM employees e
+LEFT JOIN employees m ON e.manager_id = m.employee_id
+ORDER BY e.employee_id;
+
+--------------------------------------------------------------------------------
+
+[M3.4] অনলাইন ও অফলাইন শপের সমন্বিত ও সাধারণ গ্রাহক ডিরেক্টরি
+প্রেক্ষাপট: অনলাইন স্টোর এবং ফিজিক্যাল শোরুমের দুটি আলাদা ডেটাসেটকে একীভূত করতে হবে।
+টাস্ক:
+১. online_customers এবং store_customers টেবিল থেকে ডুপ্লিকেট বাদ দিয়ে সব অনন্য গ্রাহকের নাম ও জেলার সম্মিলিত তালিকা তৈরি করতে UNION কুয়েরি লিখুন।
+২. উভয় প্ল্যাটফর্মেই কেনাকাটা করেছেন এমন বিশ্বস্ত গ্রাহকদের চিহ্নিত করতে INTERSECT ব্যবহার করে একটি কুয়েরি লিখুন।
+
+SQL সমাধান:
+-- ১. সম্মিলিত অনন্য গ্রাহক (UNION)
+SELECT full_name, city FROM online_customers
+UNION
+SELECT full_name, city FROM store_customers
+ORDER BY full_name;
+
+-- ২. উভয় শপের সাধারণ গ্রাহক (INTERSECT)
+SELECT full_name, city FROM online_customers
+INTERSECT
+SELECT full_name, city FROM store_customers;
+
+--------------------------------------------------------------------------------
+
+
+মাইলস্টোন 4: উপাত্ত পরিচ্ছন্নকরণ, ক্যালেন্ডার অ্যানালিটিক্স, সাবকুয়েরি ও CTE (মডিউল ১৩ – ১৬)
+মূল ফোকাস: TRIM, SUBSTR, ||, strftime, julianday, Subqueries, EXISTS, CTE, WITH RECURSIVE
+================================================================================
+
+[M4.1] অপরিচ্ছন্ন ডেটা ক্লিন করে স্ট্যান্ডার্ড কাস্টমার প্রোফাইল তৈরি
+প্রেক্ষাপট: ব্যবহারকারীদের এন্ট্রি করা নামের আগে-পিছে ফাঁকা স্পেস এবং ফোনের ফরম্যাট এলোমেলো রয়েছে।
+টাস্ক:
+raw_customers টেবিল থেকে নামকে TRIM ও UPPER দিয়ে প্রমিত করুন, ফোন নম্বর থেকে প্রথম ৩টি ডিজিট কেটে 'operator_code' বের করুন এবং নাম ও জেলা জোড়া লাগিয়ে 'Name (City)' ফরম্যাটে প্রোফাইল কার্ড তৈরি করুন। ফোন নম্বর NULL থাকলেও যেন পুরো লাইন NULL না হয় তা নিশ্চিত করুন।
+
+SQL সমাধান:
+SELECT 
+  UPPER(TRIM(raw_name)) AS clean_name,
+  SUBSTR(COALESCE(phone, '000'), 1, 3) AS operator_code,
+  UPPER(TRIM(raw_name)) || ' (' || city || ')' AS profile_card,
+  COALESCE(phone, 'No Contact') AS contact_phone
+FROM raw_customers;
+
+--------------------------------------------------------------------------------
+
+[M4.2] বকেয়া মেয়াদ ও সময়ভিত্তিক অর্ডার অ্যানালাইসিস
+প্রেক্ষাপট: অ্যাকাউন্টস বিভাগ অর্ডারের কত দিন অতিবাহিত হলো এবং বিল পরিশোধের শেষ সময় কখন তা হিসাব করতে চায়।
+টাস্ক:
+orders টেবিল থেকে অর্ডার তারিখের সাথে ৩০ দিন যোগ করে 'due_date' বের করুন। একই সাথে ২০২৬ সালের ৩১ মার্চের সাপেক্ষে প্রতিটি অর্ডার কত দিন আগের তা julianday ব্যবহার করে 'days_elapsed' কলাম হিসেবে পূর্ণসংখ্যায় প্রদর্শন করুন।
+
+SQL সমাধান:
+SELECT 
+  order_id, order_date,
+  date(order_date, '+30 days') AS due_date,
+  CAST(julianday('2026-03-31') - julianday(order_date) AS INT) AS days_elapsed
+FROM orders
+ORDER BY days_elapsed DESC;
+
+--------------------------------------------------------------------------------
+
+[M4.3] গড়ের চেয়ে বড় অর্ডার ও সক্রিয় গ্রাহক ফিল্টারিং
+প্রেক্ষাপট: ম্যানেজমেন্ট দেখতে চায় কোন কোন গ্রাহক সাধারণ গড়ের চেয়ে বড় মাপের কেনাকাটায় যুক্ত।
+টাস্ক:
+১. একটি Scalar Subquery ব্যবহার করে যেসব অর্ডারের মূল্য সকল অর্ডারের গড় মূল্যের চেয়ে বেশি, তাদের তালিকা ফিল্টার করুন।
+২. এরপর একটি Correlated Subquery এবং EXISTS ব্যবহার করে যেসব গ্রাহকের এমন বড় অর্ডারের রেকর্ড রয়েছে কেবল তাদের পুরো নাম ও জেলা প্রদর্শন করুন।
+
+SQL সমাধান:
+SELECT c.customer_id, c.full_name, c.city
+FROM customers c
+WHERE EXISTS (
+  SELECT 1 FROM orders o
+  WHERE o.customer_id = c.customer_id
+    AND o.total_amount > (SELECT AVG(total_amount) FROM orders)
+);
+
+--------------------------------------------------------------------------------
+
+[M4.4] চেইন্ড CTE দিয়ে মাল্টি-স্টেজ গ্রাহক পাইপলাইন তৈরি
+প্রেক্ষাপট: জটিল নেস্টেড কুয়েরির বদলে ধাপে ধাপে বিজনেস লজিক সাজিয়ে একটি কাস্টমার লাইফটাইম ভ্যালু রিপোর্ট তৈরি করতে হবে।
+টাস্ক:
+একটি Chained CTE (WITH) তৈরি করুন যেখানে:
+ধাপ ১ (spend_calc): প্রতিটি গ্রাহকের মোট ব্যয়ের পরিমাণ নির্ণয় হবে।
+ধাপ ২ (segment): সেই ব্যয়ের ওপর ভিত্তি করে ২০০০ বা ততোধিক হলে 'High Spender' নতুবা 'Regular Spender' ট্যাগ দেওয়া হবে।
+চূড়ান্ত কুয়েরি: শুধুমাত্র 'High Spender' গ্রাহকদের নাম, জেলা ও মোট ব্যয়ের পরিমাণ প্রদর্শন করবে।
+
+SQL সমাধান:
+WITH spend_calc AS (
+  SELECT c.customer_id, c.full_name, c.city,
+    SUM(o.total_amount) AS total_spent
+  FROM customers c
+  JOIN orders o USING(customer_id)
+  GROUP BY c.customer_id
+),
+segment AS (
+  SELECT customer_id, full_name, city, total_spent,
+    CASE 
+      WHEN total_spent >= 2000 THEN 'High Spender'
+      ELSE 'Regular Spender'
+    END AS customer_class
+  FROM spend_calc
+)
+SELECT full_name, city, total_spent, customer_class
+FROM segment
+WHERE customer_class = 'High Spender'
+ORDER BY total_spent DESC;
+
+--------------------------------------------------------------------------------
+
+
+মাইলস্টোন 5: উইন্ডো ফাংশন, পারফরম্যান্স টিউনিং ও পূর্ণাঙ্গ ক্যাপস্টোন (মডিউল ১৭ – ২০)
+মূল ফোকাস: ROW_NUMBER, DENSE_RANK, LAG, Running Total, CREATE INDEX, EXPLAIN QUERY PLAN, Capstone Project
+================================================================================
+
+[M5.1] জেলা ভিত্তিক সেলস লিডারবোর্ড ও স্থান নির্ধারণ
+প্রেক্ষাপট: প্রতিটি জেলায় সবচেয়ে বেশি টাকা খরচ করা শীর্ষ গ্রাহকদের স্বীকৃতি দিতে হবে।
+টাস্ক:
+গ্রাহকদের জেলা ও মোট ব্যয়ের পরিমাণের ওপর ভিত্তি করে DENSE_RANK() এবং PARTITION BY ব্যবহার করে একটি কুয়েরি লিখুন, যাতে প্রতিটি জেলায় ব্যয় অনুসারে ক্রেতাদের ১, ২, ৩ র‍্যাংক নির্ধারিত হয়। এরপর CTE ব্যবহার করে প্রতিটি জেলার শুধুমাত্র ১ নম্বর শীর্ষ ক্রেতাকে ফিল্টার করে দেখান।
+
+SQL সমাধান:
+WITH district_ranking AS (
+  SELECT 
+    c.city, c.full_name,
+    SUM(o.total_amount) AS total_spent,
+    DENSE_RANK() OVER (
+      PARTITION BY c.city 
+      ORDER BY SUM(o.total_amount) DESC
+    ) AS district_rank
+  FROM customers c
+  JOIN orders o USING(customer_id)
+  GROUP BY c.customer_id
+)
+SELECT city, full_name, total_spent
+FROM district_ranking
+WHERE district_rank = 1
+ORDER BY total_spent DESC;
+
+--------------------------------------------------------------------------------
+
+[M5.2] মাসিক রাজস্বের প্রবৃদ্ধি ও ট্রেন্ড অ্যানালাইসিস
+প্রেক্ষাপট: ব্যবসার আয়ের গতিধারা বুঝতে চলতি মাসের সাথে ঠিক আগের মাসের বিক্রির রাজস্ব তুলনা করতে হবে।
+টাস্ক:
+monthly_sales টেবিল থেকে মাসভিত্তিক মোট রাজস্ব এবং LAG() ব্যবহার করে তার পূর্ববর্তী মাসের রাজস্ব বের করুন। এরপর চলতি ও আগের মাসের ব্যবধান হিসাব করে 'mom_growth' (Month-over-Month Growth) কলাম তৈরি করে ফলাফলটি কালানুক্রমিকভাবে সাজান।
+
+SQL সমাধান:
+SELECT 
+  month_id, revenue,
+  LAG(revenue) OVER (ORDER BY month_id) AS prev_month_revenue,
+  (revenue - LAG(revenue) OVER (ORDER BY month_id)) AS mom_growth
+FROM monthly_sales
+ORDER BY month_id ASC;
+
+--------------------------------------------------------------------------------
+
+[M5.3] ক্রমপুঞ্জিত মোট বিক্রয় ও চলমান গড় ফ্রেম
+প্রেক্ষাপট: ফাইন্যান্স ডিরেক্টর বছরের মোট জমার ক্রমপুঞ্জিত হিসাব এবং বিগত ২ মাসের চলমান গড় দেখতে চান।
+টাস্ক:
+monthly_sales টেবিল থেকে SUM() OVER (ORDER BY ...) ব্যবহার করে একটি পুঞ্জীভূত মোট যোগফল (running_total) তৈরি করুন। একই সাথে ROWS BETWEEN 1 PRECEDING AND CURRENT ROW ব্যবহার করে বিগত ২ মাসের চলমান গড় (moving_average) পূর্ণসংখ্যায় প্রকাশ করুন।
+
+SQL সমাধান:
+SELECT 
+  month_id, revenue,
+  SUM(revenue) OVER (ORDER BY month_id) AS running_total,
+  CAST(AVG(revenue) OVER (
+    ORDER BY month_id
+    ROWS BETWEEN 1 PRECEDING AND CURRENT ROW
+  ) AS INT) AS moving_average
+FROM monthly_sales;
+
+--------------------------------------------------------------------------------
+
+[M5.4] ইনডেক্সিং অপ্টিমাইজেশন ও কুয়েরি প্ল্যান নিরীক্ষা
+প্রেক্ষাপট: লাখ লাখ অর্ডারের টেবিলে কুয়েরি দ্রুত করতে ইনডেক্সিং এবং তার কর্মক্ষমতা প্রমাণ করতে হবে।
+টাস্ক:
+১. orders টেবিলের customer_id ও total_amount কলামের ওপর একটি কম্পোজিট ইনডেক্স তৈরির SQL লিখুন।
+২. EXPLAIN QUERY PLAN ব্যবহার করে customer_id = 1 এবং total_amount > 1000 শর্তে কুয়েরিটি ইনডেক্স সার্চ (SEARCH TABLE USING INDEX) ব্যবহার করছে কিনা তা নিরীক্ষার কুয়েরি লিখুন।
+৩. অপ্টিমাইজেশন পরীক্ষা শেষে orders টেবিল থেকে এই কম্পোজিট ইনডেক্সটি মুছে ফেলার জন্য DROP INDEX স্টেটমেন্ট লিখুন।
+
+SQL সমাধান:
+-- ১. কম্পোজিট ইনডেক্স তৈরি
+CREATE INDEX idx_orders_cust_amt 
+ON orders(customer_id, total_amount);
+
+-- ২. এক্সিকিউশন প্ল্যান বিশ্লেষণ
+EXPLAIN QUERY PLAN
+SELECT * FROM orders
+WHERE customer_id = 1 AND total_amount > 1000;
+
+-- ৩. ইনডেক্স অপসারণ
+DROP INDEX idx_orders_cust_amt;
+
+--------------------------------------------------------------------------------
+
+
