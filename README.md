@@ -1,136 +1,225 @@
-# Practical SQL Mastery: From Foundations to Advanced Analytics
-### A 20-Module University-Grade Curriculum Built on Real E-Commerce Data
+<p align="center">
+  <img src="assets/hero_banner.svg" alt="Practical SQL Mastery" width="100%" />
+</p>
 
-**Curriculum Architect & Instructor:** Md. Rafijur Rahman  
-**Live Practice Lab:** [sql-practice-lab.netlify.app](https://sql-practice-lab.netlify.app/)  
-**Interactive Learning Hub:** [sql-learning-hub.netlify.app](https://sql-learning-hub.netlify.app/)  
-**LinkedIn:** [linkedin.com/in/mdrafijur](https://www.linkedin.com/in/mdrafijur)
-
----
-
-## Why I Built This Curriculum
-
-When I started teaching SQL to junior university students, I ran straight into two painful patterns.
-
-The first was the setup trap. Half the class spent their first three lab sessions wrestling with database client configurations, broken local server permissions, and forgotten root passwords. By the time their local database engine responded, their curiosity had faded.
-
-The second was the toy problem trap. Online tutorials frequently use sterile tables like `TableA (id, val)` and ask students to find the second highest salary. In actual company databases, data is messy. Dates arrive in varied formats. Customers have duplicate accounts across different phone numbers. Orders get cancelled halfway through payment, leaving orphaned records that ruin naive joins.
-
-I built this repository to fix both problems.
-
-Every query, milestone challenge, and schema in this curriculum runs against a realistic 7-table retail relational database called **BD Shop** (`bdshop.db`). It contains 65 authentic student profiles, real product catalogs, district-level shipping routes across Bangladesh, and realistic order histories. 
-
-Students learn relational logic on data that looks and behaves like an actual business.
+<p align="center">
+  <a href="https://sql-practice-lab.netlify.app/"><img src="https://img.shields.io/badge/Live_Lab-In--Browser_IDE-0284C7?style=for-the-badge&logo=rocket&logoColor=white" alt="Live Lab" /></a>
+  <a href="https://sql-learning-hub.netlify.app/"><img src="https://img.shields.io/badge/Learning_Hub-20_Modules-16A34A?style=for-the-badge&logo=bookstack&logoColor=white" alt="Learning Hub" /></a>
+  <a href="#database-schema--er-diagram"><img src="https://img.shields.io/badge/Dataset-BD_Shop_(7_Tables)-D97706?style=for-the-badge&logo=databricks&logoColor=white" alt="Dataset" /></a>
+  <a href="#challenge-sets-115-enterprise-queries"><img src="https://img.shields.io/badge/Challenges-115_Queries-6366F1?style=for-the-badge&logo=codeforces&logoColor=white" alt="Challenges" /></a>
+  <a href="https://www.linkedin.com/in/mdrafijur"><img src="https://img.shields.io/badge/Instructor-Md._Rafijur_Rahman-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
+</p>
 
 ---
 
-## Cloud Companions (Zero Setup Required)
+## 🌐 Cloud Companions (No Database Installation Required)
 
-You do not need to install MySQL, PostgreSQL, or any local database server to complete this course. I deployed two companion web platforms so anyone with an internet browser can practice immediately.
+To make learning friction-free, I built and deployed two companion web applications. Students run real queries in their browser without setting up local database servers or dealing with broken configurations:
 
-* **[SQL Practice Lab (Interactive IDE)](https://sql-practice-lab.netlify.app/):** Runs a full SQLite database directly inside your browser via WebAssembly (`sql.js`). It hosts 115 enterprise challenges with real-time automated query evaluation and cloud progress saving.
-* **[SQL Learning Hub (Module Walkthroughs)](https://sql-learning-hub.netlify.app/):** Interactive slide reader and conceptual walkthroughs across all 20 modules, detailing syntax rules, visual execution orders, and schema diagrams.
-
-If you prefer practicing on your personal computer offline, download `bdshop.db` from this repository and open it in [DB Browser for SQLite](https://sqlitebrowser.org/). It works identically.
-
----
-
-## Curriculum Overview (20 Modules)
-
-The course moves through a structured progression from zero knowledge to advanced analytical queries:
-
-| Module | Core Topic | Key Concepts & Functions |
-| :--- | :--- | :--- |
-| **01** | Database & SQL Foundations | RDBMS concepts, tables, primary keys, SQLite setup |
-| **02** | SELECT, Alias & DISTINCT | Column selection, readable aliases, eliminating duplicates |
-| **03** | WHERE Clause & Filtering | Exact matching, relational operators, AND / OR logic |
-| **04** | Advanced Filtering & Sorting | IN, BETWEEN, LIKE pattern matching, ORDER BY, LIMIT, OFFSET |
-| **05** | DDL & DML Operations | CREATE TABLE, constraints, INSERT, UPDATE, DELETE, transactions |
-| **06** | Aggregate Functions & GROUP BY | COUNT, SUM, AVG, MIN, MAX, grouping aggregations |
-| **07** | HAVING & Execution Order | Post-aggregation filtering, FROM-to-LIMIT query execution pipeline |
-| **08** | Conditional & Coercion Functions | CASE WHEN expressions, COALESCE, NULLIF, CAST type conversions |
-| **09** | INNER JOIN & Relationships | Foreign keys, ER relationships, multi-table joins |
-| **10** | LEFT JOIN & Anti-Join | Preserving unmatched rows, finding missing customers via IS NULL |
-| **11** | SELF JOIN & CROSS JOIN | Hierarchical reporting, pairing entities, Cartesian products |
-| **12** | Set Operators | UNION, UNION ALL, INTERSECT, EXCEPT set operations |
-| **13** | String & Numeric Functions | UPPER, LOWER, TRIM, SUBSTR, LENGTH, INSTR, ROUND |
-| **14** | Date & Time Analysis | DATE, STRFTIME, parsing timestamps, monthly cohorts |
-| **15** | Subqueries & EXISTS | Correlated subqueries, scalar subqueries, EXISTS vs IN performance |
-| **16** | Common Table Expressions (CTE) | Readable multi-step pipelines with WITH syntax, recursive queries |
-| **17** | Window Functions (Rankings) | OVER (PARTITION BY ... ORDER BY), ROW_NUMBER, RANK, DENSE_RANK |
-| **18** | Window Functions (Offsets & Running Totals) | LAG, LEAD period-over-period differences, rolling cumulative sums |
-| **19** | Indexing, Query Plans & Modeling | EXPLAIN QUERY PLAN, B-Tree indexes, normal forms (1NF to 3NF) |
-| **20** | BD Shop Capstone Project | End-to-end business reporting, customer lifetime value, cohort analysis |
+<table>
+  <tr>
+    <td width="50%" align="center" valign="top">
+      <h3>⚡ SQL Practice Lab</h3>
+      <p><b>In-browser SQLite WebAssembly IDE</b></p>
+      <p>Solve 115 enterprise challenges with automated real-time query validation, schema viewer, and cloud progress tracking.</p>
+      <a href="https://sql-practice-lab.netlify.app/">
+        <img src="assets/practice_lab_preview.png" alt="SQL Practice Lab Preview" width="100%" style="border-radius: 8px; border: 1px solid #334155;" />
+      </a>
+      <br><br>
+      <a href="https://sql-practice-lab.netlify.app/">
+        <img src="https://img.shields.io/badge/Launch_Practice_Lab-Open_IDE-0284C7?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Launch Lab" />
+      </a>
+    </td>
+    <td width="50%" align="center" valign="top">
+      <h3>📚 SQL Learning Hub</h3>
+      <p><b>Curriculum Portal & Slide Viewer</b></p>
+      <p>Module-by-module slide reader, query syntax breakdowns, execution order diagrams, and realistic business reports.</p>
+      <a href="https://sql-learning-hub.netlify.app/">
+        <img src="assets/learning_hub_preview.png" alt="SQL Learning Hub Preview" width="100%" style="border-radius: 8px; border: 1px solid #334155;" />
+      </a>
+      <br><br>
+      <a href="https://sql-learning-hub.netlify.app/">
+        <img src="https://img.shields.io/badge/Open_Learning_Hub-View_Modules-16A34A?style=for-the-badge&logo=gitbook&logoColor=white" alt="Open Hub" />
+      </a>
+    </td>
+  </tr>
+</table>
 
 ---
 
-## Challenge Sets: 115 Business Queries
+## 🎯 The Origin Story: Why I Built This
 
-The curriculum includes 115 practical problems divided into two distinct tracks:
+When I started teaching SQL to junior university students at Government Brojomohun College (BM College), I ran straight into two painful patterns.
 
-1. **95 Module-Wise Practice Questions:** Five focused questions per module (Modules 02 to 20) that isolate and verify specific SQL syntax right after learning the concept.
-2. **20 Milestone Case Studies:** Four comprehensive business scenarios placed after every four modules:
-   * **Milestone 1 (Modules 01-04):** Customer demographics, order volume, and district order value analysis.
-   * **Milestone 2 (Modules 05-08):** Revenue leaks, missing phone numbers, and payment status auditing.
-   * **Milestone 3 (Modules 09-12):** Multi-table fulfillment, product inventory gaps, and anti-join retention analysis.
-   * **Milestone 4 (Modules 13-16):** Monthly sales growth, customer purchase intervals, and CTE reporting pipelines.
-   * **Milestone 5 (Modules 17-20):** Customer lifetime value, top customer ranking by district, and RFM segmentation.
+The first was the **installation trap**. Half the class spent their first three lab sessions wrestling with MySQL installer crashes, forgotten root passwords, and port 3306 permission conflicts. By the time their local database engine responded, their motivation had died.
+
+The second was the **toy problem trap**. Generic online tutorials rely on abstract tables like `TableA (id, val)` and ask students to find the second highest salary. In actual company databases, data is messy. Customers duplicate accounts across different phone numbers. Orders get cancelled halfway through payment, leaving orphaned records that break naive joins. Dates arrive in irregular timestamp formats.
+
+I built this curriculum to fix both problems:
+1. **Zero Setup Barrier:** Students start querying on day one using the in-browser WebAssembly lab.
+2. **Messy, Localized Data:** Every single query runs against **BD Shop** (`bdshop.db`), an authentic 7-table relational dataset containing 65 localized student profiles from 6 southern districts of Bangladesh, real order flows, product catalogs, and managerial hierarchies.
+
+Students learn relational logic on data that mirrors a living business.
 
 ---
 
-## Repository Structure
+## 🗄️ Database Schema & ER Diagram
 
-```text
-├── README.md                          # Master curriculum guide and index
-├── 01_Database_and_Datasets/          # The BD Shop relational database and schemas
-│   ├── bdshop.db                      # Ready-to-use SQLite database file
-│   ├── bdshop_full.sql                # Complete schema and dataset insert script
-│   ├── bdshop_lite.sql                # Lightweight version for quick testing
-│   ├── db_fiddle_schema.txt           # Pre-formatted schema for online DB Fiddle
-│   └── README_DATASET.md              # Detailed schema map, ER diagram, and table notes
-├── 02_Student_Practice_SQL/           # Individual setup scripts for modules 01 to 20
-├── 03_Questions/                      # Student question sets (PDF and plain text)
-│   ├── 01_Module_Wise_Questions/      # 95 module-level questions
-│   └── 02_Milestone_Case_Studies/     # 20 milestone enterprise case studies
-├── 04_Solutions/                      # Full reference solutions and query explanations
-│   ├── 01_Module_Wise_Solutions/      # Complete solutions for all 95 module questions
-│   └── 02_Milestone_Case_Studies_Solutions/ # Complete solutions for all 20 milestone scenarios
-└── 05_Lab_Cheat_Sheet/                # Two-page lab cheat sheet for quick reference during class
-    ├── SQL_LAB_CHEAT_SHEET.pdf        # Print-ready 2-page color-coded cheat sheet
-    └── SQL_LAB_CHEAT_SHEET.txt        # Plain-text quick reference
+The **BD Shop** database contains 7 relational tables with authentic foreign key relationships, missing data edge cases, and self-referencing managerial hierarchies:
+
+```mermaid
+erDiagram
+    CUSTOMERS ||--o{ ORDERS : "places"
+    CATEGORIES ||--o{ PRODUCTS : "groups"
+    ORDERS ||--|{ ORDER_ITEMS : "contains"
+    PRODUCTS ||--o{ ORDER_ITEMS : "ordered_in"
+    DEPARTMENTS ||--o{ EMPLOYEES : "employs"
+    EMPLOYEES ||--o{ EMPLOYEES : "manages"
+
+    CUSTOMERS {
+        int customer_id PK
+        string full_name
+        string district
+        string phone
+        string email
+        string status
+    }
+    CATEGORIES {
+        int category_id PK
+        string category_name
+    }
+    PRODUCTS {
+        int product_id PK
+        string product_name
+        int category_id FK
+        numeric unit_price
+        int stock_qty
+    }
+    ORDERS {
+        int order_id PK
+        int customer_id FK
+        date order_date
+        numeric total_amount
+        string payment_status
+        string shipping_district
+    }
+    ORDER_ITEMS {
+        int item_id PK
+        int order_id FK
+        int product_id FK
+        int quantity
+        numeric item_price
+    }
+    DEPARTMENTS {
+        int dept_id PK
+        string dept_name
+    }
+    EMPLOYEES {
+        int emp_id PK
+        string emp_name
+        int dept_id FK
+        int manager_id FK
+        numeric salary
+        date hire_date
+    }
 ```
 
 ---
 
-## How to Use This Repository
+## 🗺️ 20-Module Curriculum Roadmap
 
-### For Independent Learners
-1. Open the [SQL Practice Lab](https://sql-practice-lab.netlify.app/) in your browser to start writing queries without installing any software.
-2. Read the corresponding module concept in the [SQL Learning Hub](https://sql-learning-hub.netlify.app/).
-3. Pick up the question set from `03_Questions/` and attempt to solve each business problem on your own.
-4. Check your logic against the reference solutions in `04_Solutions/`.
+The curriculum progresses systematically from baseline data retrieval to advanced analytical window functions and database modeling:
 
-### For Teachers & Lab Instructors
-1. Share `01_Database_and_Datasets/bdshop.db` with your students, or direct them to open `01_Database_and_Datasets/db_fiddle_schema.txt` in an online sandbox.
-2. Print `05_Lab_Cheat_Sheet/SQL_LAB_CHEAT_SHEET.pdf` (2 pages) as a physical classroom desk reference.
-3. Distribute `03_Questions/01_Module_Wise_Questions/STUDENT_QUESTIONS.pdf` for daily lab assignments and `03_Questions/02_Milestone_Case_Studies/MILESTONE_CASE_STUDIES.pdf` for milestone exams.
-4. Use `04_Solutions/` to grade submissions and explain optimal query execution paths.
+| Module | Core Topic | Key SQL Concepts & Clauses | Challenges |
+| :---: | :--- | :--- | :---: |
+| **01** | Database & SQL Foundations | RDBMS concepts, tables, primary keys, SQLite 3.30 baseline | Concept |
+| **02** | SELECT, Alias & DISTINCT | Projection, readable column aliasing, duplicate suppression | 5 Queries |
+| **03** | WHERE Clause & Filtering | Exact matching, relational operators, AND / OR compound logic | 5 Queries |
+| **04** | Advanced Filtering & Sorting | IN, BETWEEN, LIKE wildcards, ORDER BY, LIMIT, OFFSET | 5 Queries |
+| **05** | DDL & DML Operations | CREATE TABLE, constraints, INSERT, UPDATE, DELETE, transactions | 5 Queries |
+| **06** | Aggregate Functions & GROUP BY | COUNT, SUM, AVG, MIN, MAX, grouping aggregations | 5 Queries |
+| **07** | HAVING & Execution Order | Post-aggregation filtering, FROM-to-LIMIT execution pipeline | 5 Queries |
+| **08** | Conditional & Coercion Functions | CASE WHEN expressions, COALESCE, NULLIF, CAST conversions | 5 Queries |
+| **09** | INNER JOIN & Relationships | Foreign keys, ER mapping, multi-table relationship queries | 5 Queries |
+| **10** | LEFT JOIN & Anti-Join | Preserving unmatched rows, finding churned customers via IS NULL | 5 Queries |
+| **11** | SELF JOIN & CROSS JOIN | Hierarchical manager trees, Cartesian pairing comparisons | 5 Queries |
+| **12** | Set Operators | UNION, UNION ALL, INTERSECT, EXCEPT set operations | 5 Queries |
+| **13** | String & Numeric Functions | UPPER, LOWER, TRIM, SUBSTR, LENGTH, INSTR, ROUND | 5 Queries |
+| **14** | Date & Time Analysis | DATE, STRFTIME, timestamp parsing, monthly cohort extraction | 5 Queries |
+| **15** | Subqueries & EXISTS | Correlated subqueries, scalar subqueries, EXISTS vs IN indexing | 5 Queries |
+| **16** | Common Table Expressions (CTE) | Multi-step reporting pipelines with WITH syntax, recursive CTEs | 5 Queries |
+| **17** | Window Functions (Rankings) | OVER (PARTITION BY ... ORDER BY), ROW_NUMBER, RANK, DENSE_RANK | 5 Queries |
+| **18** | Window Functions (Offsets & Totals) | LAG, LEAD period differences, rolling cumulative running sums | 5 Queries |
+| **19** | Indexing, Query Plans & Modeling | EXPLAIN QUERY PLAN, B-Tree indexes, normal forms (1NF to 3NF) | 5 Queries |
+| **20** | BD Shop Capstone Project | End-to-end business reporting, customer lifetime value analysis | 5 Queries |
 
 ---
 
-## Technical Standards & Database Baseline
+## 🏆 Challenge Sets: 115 Enterprise Queries
 
-* **Engine Baseline:** Pure SQLite 3.30+ (ISO SQL compliant core syntax).
-* **Portability:** Queries are structured so that syntax transfers cleanly to PostgreSQL, MySQL, and modern data warehouses with minimal dialect adjustments.
-* **Localization:** Data entries include realistic names, districts (Dhaka, Chittagong, Patuakhali, Sylhet, Rajshahi), and realistic local currencies.
+The curriculum includes **115 practical business problems** split into two targeted tracks:
+
+1. **95 Module-Wise Practice Questions:** Five focused questions per module (Modules 02 to 20) that isolate and test syntax immediately after learning the lesson.
+2. **20 Milestone Enterprise Scenarios:** Four deep-dive business case studies after every four modules:
+   * **Milestone 1 (Modules 01-04):** Customer demographics, order volume, and district order value analysis.
+   * **Milestone 2 (Modules 05-08):** Revenue leakage detection, missing contact numbers, and payment status audits.
+   * **Milestone 3 (Modules 09-12):** Multi-table fulfillment gaps, product stock depletion, and anti-join customer retention.
+   * **Milestone 4 (Modules 13-16):** Month-over-month growth, purchase frequency intervals, and CTE reporting pipelines.
+   * **Milestone 5 (Modules 17-20):** Customer lifetime value (LTV), top spenders by district, and RFM customer segmentation.
 
 ---
 
-## License & Community Use
+## 📂 Repository Directory Layout
 
-This project is created by **Md. Rafijur Rahman (Zuboraj)**.
+```text
+practical-sql-mastery/
+├── assets/                            # Visual banners and platform preview screenshots
+│   ├── hero_banner.svg                # Master curriculum vector banner
+│   ├── practice_lab_preview.png       # Live SQL Practice Lab interface snapshot
+│   └── learning_hub_preview.png       # Live SQL Learning Hub portal snapshot
+├── 01_Database_and_Datasets/          # The BD Shop relational database and schemas
+│   ├── bdshop.db                      # Ready-to-use SQLite database file (7 tables)
+│   ├── bdshop_full.sql                # Complete schema and dataset insert script
+│   ├── bdshop_lite.sql                # Lightweight version for quick testing
+│   ├── db_fiddle_schema.txt           # Pre-formatted schema for online DB Fiddle
+│   └── README_DATASET.md              # Detailed schema map, table roster, and student profiles
+├── 02_Student_Practice_SQL/           # Individual setup scripts for modules 01 to 20
+├── 03_Questions/                      # Student question sets (PDF and plain text)
+│   ├── 01_Module_Wise_Questions/      # 95 module-level questions (STUDENT_QUESTIONS.pdf)
+│   └── 02_Milestone_Case_Studies/     # 20 milestone case studies (MILESTONE_CASE_STUDIES.pdf)
+├── 04_Solutions/                      # Instructor solutions and query explanations
+│   ├── 01_Module_Wise_Solutions/      # Complete solutions for all 95 module questions
+│   └── 02_Milestone_Case_Studies_Solutions/ # Complete solutions for all 20 milestone scenarios
+├── 05_Lab_Cheat_Sheet/                # Classroom reference cheat sheet
+│   ├── SQL_LAB_CHEAT_SHEET.pdf        # Print-ready 2-page color-coded cheat sheet (Kalpurush font)
+│   └── SQL_LAB_CHEAT_SHEET.txt        # Plain-text quick reference
+└── README.md                          # Master curriculum guide and index
+```
 
-*"শিক্ষা হোক উন্মুক্ত, শিক্ষা হোক বিনামূল্যে, জ্ঞান কোনো পণ্য নয়, এটি সবার অধিকার।"*  
-*(Education should be open, education should be free, knowledge is not a commodity, it is everyone's right.)*
+---
 
-You are free to use, teach, fork, and adapt these course materials for academic classes, university labs, and personal study. If you find this curriculum useful in your learning journey, a GitHub Star ⭐ is always appreciated.
+## 🚀 How to Practice
+
+### Option A: In-Browser (Instant, Zero Setup)
+1. Launch the **[SQL Practice Lab](https://sql-practice-lab.netlify.app/)**.
+2. Select any module from 02 to 20.
+3. Write your query in the code editor and hit **Run Query (Ctrl + Enter)**.
+4. The WebAssembly engine validates your output table against the expected result instantly.
+
+### Option B: Offline Desktop (DB Browser for SQLite)
+1. Download `01_Database_and_Datasets/bdshop.db` from this repository.
+2. Open it in **[DB Browser for SQLite](https://sqlitebrowser.org/)** (available for Windows, Mac, and Linux).
+3. Navigate to the **Execute SQL** tab and write your queries directly against the local database file.
+
+---
+
+## 👨‍🏫 Author & Community Dedication
+
+**Md. Rafijur Rahman (Zuboraj)**  
+*Department of Statistics, Government Brojomohun College (BM College), Barishal*  
+*Portfolio & Connect:* [linkedin.com/in/mdrafijur](https://www.linkedin.com/in/mdrafijur)
+
+> *"শিক্ষা হোক উন্মুক্ত, শিক্ষা হোক বিনামূল্যে, জ্ঞান কোনো পণ্য নয়, এটি সবার অধিকার।"*  
+> *(Education should be open, education should be free; knowledge is not a commodity, it is everyone's right.)*
+
+If you find this curriculum helpful for your university labs, personal learning, or teaching, please consider giving it a **Star ⭐** to help other students find it.
